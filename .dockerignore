@@ -1,3 +1,7 @@
 .git
 node_modules/
 .yarn/
+.env
+/.env*
+/yarn-error.log
+/.gitignore
