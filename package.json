@@ -1,6 +1,6 @@
 {
   "name": "@rockstat/kafkastream",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Rockstat kafkastream service",
   "main": "dist/index.js",
   "scripts": {
