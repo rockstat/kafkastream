@@ -1,5 +1,7 @@
 ---
 title: Rockstat kafka streamer
+version: "<%= pkg.version %>"
+
 rpc:
   name: kafkastream
   listen_all: true
@@ -23,5 +25,6 @@ metrics:
     prefix: krn
 
 kafkastream:
-  clientId: 'rst-kafkastream'
+  clientId: "rst-kafkastream"
   brokers: [<%= env.KAFKA_BROKERS || '' %>]
+  mapping: {}

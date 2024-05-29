@@ -22,7 +22,6 @@ import {
 import {
   SERVICE_DIRECTOR,
   METHOD_IAMALIVE,
-  METHOD_STATUS,
   BROADCAST
 } from '@app/constants';
 
@@ -102,13 +101,12 @@ export class AppServer {
   async setup() {
     await this.kafkamanager.init();
     this.rpc.register(BROADCAST, this.kafkamanager.write);
-    // this.rpc.register(METHOD_STATUS, this.status.get);
     const aliver = () => {
       this.meter.tick('band.kafkamanager.alive')
-      this.rpc.notify(SERVICE_DIRECTOR, METHOD_IAMALIVE, { name: this.name })
+      // this.rpc.notify(SERVICE_DIRECTOR, METHOD_IAMALIVE, { name: this.name })
     };
-    setTimeout(aliver, 500);
-    setInterval(aliver, 5 * 1000);
+    // setTimeout(aliver, 500);
+    setInterval(aliver, 1 * 1000);
   }
 
   /**

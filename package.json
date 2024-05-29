@@ -41,8 +41,11 @@
   },
   "dependencies": {
     "@rockstat/rock-me-ts": "^2.0.0",
+    "@types/get-value": "^3.0.5",
     "debug": "^4.3.4",
+    "get-value": "^3.0.1",
     "glob": "^10.3.10",
+    "isobject": "^4.0.0",
     "js-yaml": "^4.1.0",
     "kafkajs": "^2.2.4",
     "qs": "^6.12.0",
