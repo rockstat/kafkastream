@@ -116,45 +116,48 @@ export class KafkaManager {
         }
       }
 
-      if (topic && kafkaKey && ('data' in rest) && isObject(rest.data)) {
+      if (topic && kafkaKey) {
+        if (('data' in rest) && isObject(rest.data)) {
 
-        const kafkaKeyValue = getValue(rest, kafkaKey);
-        
-        // this.log.info({ kafkaKeyValue, kafkaKey, topic, rest: rest.data }, 'pre msg')
+          const kafkaKeyValue = getValue(rest, kafkaKey);
 
-        if (!kafkaKeyValue) {
-          this.log.warn('no kafkaKeyValue');
-          return {};
+          // this.log.info({ kafkaKeyValue, kafkaKey, topic, rest: rest.data }, 'pre msg')
+
+          if (!kafkaKeyValue) {
+            this.log.warn('no kafkaKeyValue');
+            return {};
+          }
+
+          const data = rest.data;
+          try {
+            // data.date = dateFormat('%F', unix);
+            const dt = (new Date(time)).toISOString().substring(0, 19).replace('T', ' ');
+            data.date = dt.substring(0, 10);
+            // data.dateTime = dateFormat('%F %X', unix);
+            data.dateTime = dt;
+            data.timestamp = time;
+
+            // this.getWriter(msg.key).push({ key: rest.uid, value: JSON.stringify(rest) })
+            const msgData = JSON.stringify(rest);
+
+            await this.producer.send({
+              topic: topic,
+
+              messages: [
+                { key: kafkaKeyValue, value: msgData },
+              ],
+            })
+            // this.log.info({ kafkaKeyValue, topic, msgData }, 'msg')
+
+            this.meter.tick('ch.kafkastream.success');
+          } catch (error) {
+            console.error(`writer strange error`, error);
+          }
+
+        } else {
+          this.log.warn('no data');
+          console.log(isObject(rest.data), 'data' in rest)
         }
-        
-        const data = rest.data;
-        try {
-          // data.date = dateFormat('%F', unix);
-          const dt = (new Date(time)).toISOString().substring(0, 19).replace('T', ' ');
-          data.date = dt.substring(0, 10);
-          // data.dateTime = dateFormat('%F %X', unix);
-          data.dateTime = dt;
-          data.timestamp = time;
-
-          // this.getWriter(msg.key).push({ key: rest.uid, value: JSON.stringify(rest) })
-          const msgData = JSON.stringify(rest);
-
-          await this.producer.send({
-            topic: topic,
-
-            messages: [
-              { key: kafkaKeyValue, value: msgData },
-            ],
-          })
-          this.log.info({ kafkaKeyValue, topic, msgData }, 'msg')
-
-          this.meter.tick('ch.kafkastream.success');
-        } catch (error) {
-          console.error(`writer strange error`, error);
-        }
-      } else {
-        this.log.warn('no data');
-        console.log(isObject(rest.data), 'data' in rest)
       }
     }
     return {};

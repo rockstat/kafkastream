@@ -14,7 +14,7 @@ COPY package.json .
 COPY package-lock.json .
 
 # RUN yarn link @rockstat/rock-me-ts
-RUN npm install
+RUN npm ci && npm cache clean --force
 RUN yarn link @rockstat/rock-me-ts
 
 # RUN yarn link "@rockstat/rock-me-ts" \
